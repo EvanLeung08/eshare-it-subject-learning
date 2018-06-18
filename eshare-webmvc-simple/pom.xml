@@ -5,12 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.eshare</groupId>
-    <artifactId>source-code-learning</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>eshare-webmvc-simple</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>eshare-webmvc</module>
-    </modules>
 
-
+    
 </project>
