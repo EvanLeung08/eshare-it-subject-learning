@@ -7,7 +7,7 @@ import com.eshare.demo.service.HelloService;
  * Created by liangyh on 2018/6/23.
  * Email:10856214@163.com
  */
-@EsService("helloService")
+@EsService
 public class HelloServiceImpl implements HelloService {
     @Override
     public String sayHello(String message) {
