@@ -25,23 +25,29 @@ import java.util.regex.Pattern;
  * Email:10856214@163.com
  */
 public class EsDispatcherServlet extends HttpServlet {
-
+    /**
+     * 配置
+     */
     private Properties configProperties = new Properties();
+    /**
+     * 需要加载的类列表
+     */
     private List<String> classNames = new ArrayList<String>();
+    /**
+     * 类全限定名与实例映射集合
+     */
     private Map<String, Object> instanceMapping = new ConcurrentHashMap<String, Object>();
-
-    List<Handler> handlerMapping = new ArrayList<Handler>();
+    /**
+     * 处理器映射列表
+     */
+    private List<Handler> handlerMapping = new ArrayList<Handler>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        //1.读取配置
-        String configFilePath = config.getInitParameter("contextConfigLocation");
-        String configName = configFilePath.replace("classpath*:", "");
-        InputStream in = this.getClass().getClassLoader().getResourceAsStream(configName);
-        String packageName;
         try {
-            configProperties.load(in);
-            packageName = configProperties.getProperty("package-scan");
+            //1.读取配置
+            loadConfig(config);
+            String packageName = configProperties.getProperty("package-scan");
             //2.扫描指定包下的类
             doScanClass(packageName);
             //3.对扫描出来的类实例化
@@ -68,6 +74,18 @@ public class EsDispatcherServlet extends HttpServlet {
             resp.getWriter().write("404 Page Not Found !");
         }
 
+    }
+
+    /**
+     * 加载配置
+     *
+     * @param config
+     */
+    private void loadConfig(ServletConfig config) throws IOException {
+        String configFilePath = config.getInitParameter("contextConfigLocation");
+        String configName = configFilePath.replace("classpath*:", "");
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream(configName);
+        configProperties.load(in);
     }
 
     /**
