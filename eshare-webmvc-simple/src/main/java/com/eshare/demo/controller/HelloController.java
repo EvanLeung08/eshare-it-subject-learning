@@ -1,9 +1,9 @@
 package com.eshare.demo.controller;
 
-import com.eshare.demo.annotation.EsAutowired;
-import com.eshare.demo.annotation.EsController;
-import com.eshare.demo.annotation.EsRequestMapping;
-import com.eshare.demo.annotation.EsRequestParam;
+import com.eshare.framework.mvc.annotation.EsAutowired;
+import com.eshare.framework.mvc.annotation.EsController;
+import com.eshare.framework.mvc.annotation.EsRequestMapping;
+import com.eshare.framework.mvc.annotation.EsRequestParam;
 import com.eshare.demo.service.HelloService;
 
 import javax.servlet.http.HttpServletRequest;

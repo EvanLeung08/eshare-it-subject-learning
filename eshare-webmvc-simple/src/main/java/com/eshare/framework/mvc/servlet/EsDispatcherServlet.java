@@ -1,6 +1,6 @@
 package com.eshare.framework.mvc.servlet;
 
-import com.eshare.demo.annotation.*;
+import com.eshare.framework.mvc.annotation.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -135,7 +135,7 @@ public class EsDispatcherServlet extends HttpServlet {
                 targetParamsValues[reqIndex] = req;
                 Integer respIndex = handler.getParamMapping().get(HttpServletResponse.class.getName());
                 targetParamsValues[respIndex] = resp;
-                targetMethod.invoke(handler.getController(), targetParamsValues);
+                resp.getWriter().write((String) targetMethod.invoke(handler.getController(), targetParamsValues));
                 return true;
             }
 

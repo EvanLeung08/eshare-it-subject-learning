@@ -1,6 +1,6 @@
 package com.eshare.demo.service.impl;
 
-import com.eshare.demo.annotation.EsService;
+import com.eshare.framework.mvc.annotation.EsService;
 import com.eshare.demo.service.HelloService;
 
 /**
@@ -11,6 +11,6 @@ import com.eshare.demo.service.HelloService;
 public class HelloServiceImpl implements HelloService {
     @Override
     public String sayHello(String message) {
-        return "say hello :"+message;
+        return "hello :"+message;
     }
 }

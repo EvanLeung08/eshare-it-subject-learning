@@ -1,4 +1,4 @@
-package com.eshare.demo.annotation;
+package com.eshare.framework.mvc.annotation;
 
 import java.lang.annotation.*;
 
@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface EsController {
+public @interface EsService {
     String value() default "";
 }

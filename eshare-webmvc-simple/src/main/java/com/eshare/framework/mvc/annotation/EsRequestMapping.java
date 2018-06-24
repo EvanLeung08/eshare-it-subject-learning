@@ -1,4 +1,4 @@
-package com.eshare.demo.annotation;
+package com.eshare.framework.mvc.annotation;
 
 import java.lang.annotation.*;
 
