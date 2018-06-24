@@ -34,9 +34,9 @@ public class EsDispatcherServlet extends HttpServlet {
      */
     private List<String> classNames = new ArrayList<String>();
     /**
-     * 类全限定名与实例映射集合
+     * 类全限定名与实例映射集合,模拟applicationContext容器
      */
-    private Map<String, Object> instanceMapping = new ConcurrentHashMap<String, Object>();
+    private Map<String, Object> applicationContext = new ConcurrentHashMap<String, Object>();
     /**
      * 处理器映射列表
      */
@@ -118,6 +118,11 @@ public class EsDispatcherServlet extends HttpServlet {
 
                 //对于用户自定义参数，从请求参数获取用户传参
                 Map<String, String[]> paramMap = req.getParameterMap();
+
+             /*   paramMap.forEach((paramKey,paramValue)->{
+
+                });*/
+
                 for (Map.Entry<String, String[]> entry : paramMap.entrySet()) {
                     //转换数组格式为字符串，去掉"[]"，注意存在多个参数时要把单词变为“,”分割
                     String value = Arrays.toString(entry.getValue()).replaceAll("\\[|\\]", "").replaceAll("\\s", ",");
@@ -167,8 +172,8 @@ public class EsDispatcherServlet extends HttpServlet {
      * 执行处理类映射
      */
     private void doHandlerMapping() {
-        if (instanceMapping.isEmpty()) return;
-        for (Map.Entry entry : instanceMapping.entrySet()) {
+        if (applicationContext.isEmpty()) return;
+        for (Map.Entry entry : applicationContext.entrySet()) {
             //先获取controller上的requestMapping值
             Class<?> clazz = entry.getValue().getClass();
             String baseUrl = "";
@@ -228,11 +233,11 @@ public class EsDispatcherServlet extends HttpServlet {
     }
 
     private void doAutowired() {
-        if (instanceMapping.isEmpty()) {
+        if (applicationContext.isEmpty()) {
             return;
         }
 
-        for (Map.Entry<String, Object> entry : instanceMapping.entrySet()) {
+        for (Map.Entry<String, Object> entry : applicationContext.entrySet()) {
             Field[] fields = entry.getValue().getClass().getDeclaredFields();
             for (Field field : fields) {
                 //暴力破解权限
@@ -245,7 +250,7 @@ public class EsDispatcherServlet extends HttpServlet {
                         beanName = field.getType().getName();
                     }
                     try {
-                        field.set(entry.getValue(), instanceMapping.get(beanName));
+                        field.set(entry.getValue(), applicationContext.get(beanName));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                         continue;
@@ -283,19 +288,19 @@ public class EsDispatcherServlet extends HttpServlet {
                 //查看当前类字节码是否存在EsController、EsService注解
                 if (clazz.isAnnotationPresent(EsController.class)) {
                     String beanName = lowerFirstChar(className);
-                    instanceMapping.put(beanName, clazz.newInstance());
+                    applicationContext.put(beanName, clazz.newInstance());
                 } else if (clazz.isAnnotationPresent(EsService.class)) {
                     EsService esService = clazz.getAnnotation(EsService.class);
                     //检查是否存在自定义名称
                     String beanName = esService.value().trim();
                     if (!"".equals(beanName.trim())) {
-                        instanceMapping.put(beanName, clazz.newInstance());
+                        applicationContext.put(beanName, clazz.newInstance());
                         continue;
                     }
                     //没有自定义名称，则以接口名称作为key
                     Class<?>[] interfaces = clazz.getInterfaces();
                     for (Class i : interfaces) {
-                        instanceMapping.put(i.getName(), clazz.newInstance());
+                        applicationContext.put(i.getName(), clazz.newInstance());
                     }
 
                 }
