@@ -69,8 +69,8 @@ public class EsDispatcherServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        boolean isMatch = doRequestPattern(req, resp);
-        if (!isMatch) {
+        boolean isSuccess = processRequest(req, resp);
+        if (!isSuccess) {
             resp.getWriter().write("404 Page Not Found !");
         }
 
@@ -95,7 +95,7 @@ public class EsDispatcherServlet extends HttpServlet {
      * @param resp
      * @return
      */
-    private boolean doRequestPattern(HttpServletRequest req, HttpServletResponse resp) {
+    private boolean processRequest(HttpServletRequest req, HttpServletResponse resp) {
 
         if (handlerMapping.isEmpty()) {
             return false;
@@ -119,9 +119,6 @@ public class EsDispatcherServlet extends HttpServlet {
                 //对于用户自定义参数，从请求参数获取用户传参
                 Map<String, String[]> paramMap = req.getParameterMap();
 
-             /*   paramMap.forEach((paramKey,paramValue)->{
-
-                });*/
 
                 for (Map.Entry<String, String[]> entry : paramMap.entrySet()) {
                     //转换数组格式为字符串，去掉"[]"，注意存在多个参数时要把单词变为“,”分割
@@ -150,6 +147,12 @@ public class EsDispatcherServlet extends HttpServlet {
         return true;
     }
 
+    /**
+     * 转换字符串类型到目标类型
+     * @param value
+     * @param paramType
+     * @return
+     */
     private Object castStringToTargetType(String value, Class<?> paramType) {
 
         if (paramType == String.class) {
