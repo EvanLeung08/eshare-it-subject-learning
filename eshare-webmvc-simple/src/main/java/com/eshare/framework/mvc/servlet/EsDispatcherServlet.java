@@ -46,7 +46,7 @@ public class EsDispatcherServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         try {
             //1.读取配置
-            loadConfig(config);
+            doLoadConfig(config);
             String packageName = configProperties.getProperty("package-scan");
             //2.扫描指定包下的类
             doScanClass(packageName);
@@ -81,7 +81,7 @@ public class EsDispatcherServlet extends HttpServlet {
      *
      * @param config
      */
-    private void loadConfig(ServletConfig config) throws IOException {
+    private void doLoadConfig(ServletConfig config) throws IOException {
         String configFilePath = config.getInitParameter("contextConfigLocation");
         String configName = configFilePath.replace("classpath*:", "");
         InputStream in = this.getClass().getClassLoader().getResourceAsStream(configName);
@@ -160,9 +160,9 @@ public class EsDispatcherServlet extends HttpServlet {
         } else if (paramType == Integer.class) {
             return Integer.valueOf(value);
         } else if (paramType == int.class) {
-            return Integer.valueOf(value).intValue();
+            return Integer.valueOf(value);
         } else if (paramType == double.class) {
-            return Double.valueOf(value).doubleValue();
+            return Double.valueOf(value);
         } else if (paramType == Double.class) {
             return Double.valueOf(value);
         } else {
@@ -290,7 +290,7 @@ public class EsDispatcherServlet extends HttpServlet {
                 Class<?> clazz = Class.forName(className);
                 //查看当前类字节码是否存在EsController、EsService注解
                 if (clazz.isAnnotationPresent(EsController.class)) {
-                    String beanName = lowerFirstChar(className);
+                    String beanName = lowerInitial(className);
                     applicationContext.put(beanName, clazz.newInstance());
                 } else if (clazz.isAnnotationPresent(EsService.class)) {
                     EsService esService = clazz.getAnnotation(EsService.class);
@@ -313,7 +313,7 @@ public class EsDispatcherServlet extends HttpServlet {
         }
     }
 
-    private String lowerFirstChar(String className) {
+    private String lowerInitial(String className) {
         char[] chars = className.toCharArray();
         chars[0] += 32;
         return String.valueOf(chars);
