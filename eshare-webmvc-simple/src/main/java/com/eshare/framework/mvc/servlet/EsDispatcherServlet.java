@@ -157,15 +157,12 @@ public class EsDispatcherServlet extends HttpServlet {
 
         if (paramType == String.class) {
             return value;
-        } else if (paramType == Integer.class) {
+        } else if (paramType == Integer.class || paramType == int.class) {
             return Integer.valueOf(value);
-        } else if (paramType == int.class) {
-            return Integer.valueOf(value);
-        } else if (paramType == double.class) {
+        }  else if (paramType == double.class || paramType == Double.class) {
             return Double.valueOf(value);
-        } else if (paramType == Double.class) {
-            return Double.valueOf(value);
-        } else {
+        }
+        else {
             return null;
         }
 
@@ -175,7 +172,9 @@ public class EsDispatcherServlet extends HttpServlet {
      * 执行处理类映射
      */
     private void doHandlerMapping() {
-        if (applicationContext.isEmpty()) return;
+        if (applicationContext.isEmpty()) {
+            return;
+        }
         for (Map.Entry entry : applicationContext.entrySet()) {
             //先获取controller上的requestMapping值
             Class<?> clazz = entry.getValue().getClass();
